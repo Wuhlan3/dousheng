@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"dousheng/middleware"
 	"dousheng/service"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -17,8 +19,8 @@ var usersLoginInfo = map[string]User{
 	"zhangleidouyin": {
 		Id:            4,
 		Name:          "wuhlan3",
-		FollowCount:   0,
-		FollowerCount: 0,
+		FollowCount:   4,
+		FollowerCount: 5,
 		IsFollow:      false,
 	},
 }
@@ -33,7 +35,7 @@ type UserLoginResponse struct {
 
 type UserResponse struct {
 	Response
-	User service.UserInfoFlow `json:"user"`
+	User *service.UserInfo `json:"user"`
 }
 
 func Register(c *gin.Context) {
@@ -48,11 +50,21 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+	//生成JWT token
+	token, err := middleware.ReleaseToken(id)
+	if err != nil {
+		c.JSON(http.StatusOK, UserLoginResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+		return
+	}
+	//发送正确的响应
 	c.JSON(http.StatusOK, UserLoginResponse{
 		Response: Response{StatusCode: 0},
 		UserId:   id,
-		Token:    username + password,
+		Token:    token,
 	})
+	return
 }
 
 func Login(c *gin.Context) {
@@ -60,19 +72,29 @@ func Login(c *gin.Context) {
 	username := c.Query("username")
 	password := c.Query("password")
 
-	token := username + password
-
-	if id, err := service.UserLogin(username, password); err != nil {
+	//token := username + password
+	id, err := service.UserLogin(username, password)
+	if err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
 			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
-	} else {
-		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 0},
-			UserId:   id,
-			Token:    token,
-		})
+		return
 	}
+	//生成JWT token
+	token, err := middleware.ReleaseToken(id)
+	if err != nil {
+		c.JSON(http.StatusOK, UserLoginResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+		return
+	}
+	//发送正确响应
+	c.JSON(http.StatusOK, UserLoginResponse{
+		Response: Response{StatusCode: 0},
+		UserId:   id,
+		Token:    token,
+	})
+	return
 }
 
 func UserInfo(c *gin.Context) {
@@ -83,18 +105,21 @@ func UserInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 1, StatusMsg: "id convert error"},
 		})
+		return
 	}
-
-	if user, err := service.UserInfo(userId); err != nil {
+	user, err := service.QueryUserInfo(userId)
+	fmt.Println(user)
+	//fmt.Println(user.id)
+	if err != nil {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
 		})
-	} else {
-		//fmt.Println(*user)
-		c.JSON(http.StatusOK, UserResponse{
-			Response: Response{StatusCode: 0},
-			User:     *user,
-		})
+		return
 	}
+	//fmt.Println(*user)
+	c.JSON(http.StatusOK, UserResponse{
+		Response: Response{StatusCode: 0},
+		User:     user,
+	})
 
 }
