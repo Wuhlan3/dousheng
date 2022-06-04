@@ -2,7 +2,8 @@ package service
 
 import (
 	"dousheng/repository"
-	"dousheng/util"
+	"errors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserLoginFlow struct {
@@ -38,12 +39,12 @@ func (f *UserLoginFlow) checkParam() error {
 
 func (f *UserLoginFlow) login() (int64, error) {
 	user, err := repository.NewUserDaoInstance().QueryUserByName(f.name)
-	if err != nil {
-		util.Logger.Error("login err:" + err.Error())
-		return 0, err
+	if err != nil || user.Id == 0 {
+		return 0, errors.New("用户不存在")
 	}
-	if user.Password != f.password {
-		util.Logger.Error("login password err:" + err.Error())
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(f.password))
+	if err != nil {
+		return 0, errors.New("密码错误")
 	}
 
 	return user.Id, nil
