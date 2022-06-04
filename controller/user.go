@@ -2,7 +2,6 @@ package controller
 
 import (
 	"dousheng/service"
-	"dousheng/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -44,7 +43,10 @@ func Register(c *gin.Context) {
 
 	id, err := service.UserRegister(username, password)
 	if err != nil {
-		util.Logger.Error("register err:" + err.Error())
+		c.JSON(http.StatusOK, UserLoginResponse{
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
+		})
+		return
 	}
 	c.JSON(http.StatusOK, UserLoginResponse{
 		Response: Response{StatusCode: 0},
@@ -62,7 +64,7 @@ func Login(c *gin.Context) {
 
 	if id, err := service.UserLogin(username, password); err != nil {
 		c.JSON(http.StatusOK, UserLoginResponse{
-			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
+			Response: Response{StatusCode: 1, StatusMsg: err.Error()},
 		})
 	} else {
 		c.JSON(http.StatusOK, UserLoginResponse{

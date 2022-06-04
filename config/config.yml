@@ -8,3 +8,5 @@ datasource:
   username: root
   password: 123456
   charset: utf8
+logger:
+  logfilepath: ../log/log.txt
