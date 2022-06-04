@@ -6,6 +6,8 @@
 3. 修改配置文件，连接数据库
 4. go run main.go router.go
 
+# 目录结构
+
 ``` bash
 .
 ├── branchtest.txt
