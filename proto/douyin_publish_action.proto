@@ -1,0 +1,13 @@
+syntax = "proto3";
+package douyin.core;
+option go_package = "./proto";
+
+message douyin_publish_action_request{
+  string token = 1;
+  bytes data = 2;
+  string title = 3;
+}
+message douyin_publish_action_response{
+  int32 status_code = 1;
+  string status_msg = 2;
+}

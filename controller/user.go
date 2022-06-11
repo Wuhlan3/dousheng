@@ -10,15 +10,15 @@ import (
 
 //样例用户
 //使用token来直接映射user结构体
-var usersLoginInfo = map[string]User{
-	"zhangleidouyin": {
-		Id:            4,
-		Name:          "wuhlan3",
-		FollowCount:   4,
-		FollowerCount: 5,
-		IsFollow:      false,
-	},
-}
+//var usersLoginInfo = map[string]User{
+//	"zhangleidouyin": {
+//		Id:            4,
+//		Name:          "wuhlan3",
+//		FollowCount:   4,
+//		FollowerCount: 5,
+//		IsFollow:      false,
+//	},
+//}
 
 type UserLoginResponse struct {
 	Response

@@ -4,24 +4,31 @@ import (
 	"dousheng/controller"
 	"dousheng/middleware"
 	"github.com/gin-gonic/gin"
+	"path"
 )
 
 func initRouter(r *gin.Engine) {
 	// public directory is used to serve static resources
 	r.Static("/static", "./public")
+	r.GET("/home/go/src/dousheng/public/:name", func(c *gin.Context) {
+		name := c.Param("name")
+		filename := path.Join("./public/", name)
+		c.File(filename)
+		return
+	})
 
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	apiRouter.GET("/feed/", controller.Feed) //     /douyin/feed/
-	apiRouter.GET("/user/", middleware.AuthMiddleware(), controller.UserInfo)
-	apiRouter.POST("/user/register/", controller.Register)
-	apiRouter.POST("/user/login/", controller.Login)
+	apiRouter.GET("/feed/", controller.Feed)                                  //     /douyin/feed/
+	apiRouter.GET("/user/", middleware.AuthMiddleware(), controller.UserInfo) //已实现
+	apiRouter.POST("/user/register/", controller.Register)                    //已实现
+	apiRouter.POST("/user/login/", controller.Login)                          //已实现
 	apiRouter.POST("/publish/action/", controller.Publish)
 	apiRouter.GET("/publish/list/", controller.PublishList)
 
 	// extra apis - I
-	apiRouter.POST("/favorite/action/", middleware.AuthMiddleware(), controller.FavoriteAction)
+	apiRouter.POST("/favorite/action/", middleware.AuthMiddleware(), controller.FavoriteAction) //已实现
 	apiRouter.GET("/favorite/list/", controller.FavoriteList)
 	apiRouter.POST("/comment/action/", controller.CommentAction)
 	apiRouter.GET("/comment/list/", controller.CommentList)
