@@ -40,7 +40,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		//}
 
 		//用户存在，将user的信息写入context
-		ctx.Set("id", claims.UserId)
+		ctx.Set("uid", claims.UserId)
 		ctx.Next()
 	}
 }

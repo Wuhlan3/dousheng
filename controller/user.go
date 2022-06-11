@@ -3,15 +3,10 @@ package controller
 import (
 	"dousheng/middleware"
 	"dousheng/service"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 )
-
-// usersLoginInfo use map to store user info, and key is username+password for demo
-// user data will be cleared every time the server starts
-// test data: username=zhanglei, password=douyin
 
 //样例用户
 //使用token来直接映射user结构体
@@ -24,8 +19,6 @@ var usersLoginInfo = map[string]User{
 		IsFollow:      false,
 	},
 }
-
-//var userIdSequence = int64(1)
 
 type UserLoginResponse struct {
 	Response
@@ -108,8 +101,7 @@ func UserInfo(c *gin.Context) {
 		return
 	}
 	user, err := service.QueryUserInfo(userId)
-	fmt.Println(user)
-	//fmt.Println(user.id)
+	//fmt.Println(user)
 	if err != nil {
 		c.JSON(http.StatusOK, UserResponse{
 			Response: Response{StatusCode: 1, StatusMsg: "User doesn't exist"},
