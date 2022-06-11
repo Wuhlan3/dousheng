@@ -1,22 +1,30 @@
 package controller
 
 import (
+	"dousheng/proto/proto"
+	"dousheng/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 )
 
-type FeedResponse struct {
-	Response
-	VideoList []Video `json:"video_list,omitempty"`
-	NextTime  int64   `json:"next_time,omitempty"`
-}
-
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
-	c.JSON(http.StatusOK, FeedResponse{
-		Response:  Response{StatusCode: 0},
-		VideoList: DemoVideos,
-		NextTime:  time.Now().Unix(),
+	//var Videos *proto.Video
+	videos, err := service.Feed()
+	if err != nil {
+		c.JSON(http.StatusOK, proto.DouyinFeedResponse{
+			StatusCode: 1,
+			StatusMsg:  "Video loads Error",
+		})
+	}
+	//视频加载没有出错
+	c.JSON(http.StatusOK, proto.DouyinFeedResponse{
+
+		//StatusCode: 0,
+		StatusCode: 0,
+		StatusMsg:  "Video loads successfully",
+		VideoList:  videos,
+		NextTime:   time.Now().Unix(),
 	})
 }
