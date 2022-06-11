@@ -50,7 +50,7 @@ VALUES (1, 1, 'bear.mp4', 'bear.jpg', 10, 4, 'bear',  '2022-06-01 10:00:00', '20
 
 CREATE TABLE `comment`
 (
-    `id`          bigint(20) unsigned NOT NULL COMMENT '主键id',
+    `id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `vid`         bigint(20) unsigned NOT NULL COMMENT '视频id',
     `uid`         bigint(20) unsigned NOT NULL COMMENT '用户id',
     `content`     text                NOT NULL COMMENT '评论内容',
@@ -73,12 +73,13 @@ VALUES (1, 2, 1, '这视频很有意思喔', '2022-06-01 10:00:00', '2022-06-01 
 
 CREATE TABLE `favourite`
 (
-    `id`            bigint(20) unsigned NOT NULL COMMENT '主键id',
+    `id`            bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `uid`           bigint(20) unsigned NOT NULL COMMENT '点赞者id',
     `vid`           bigint(20) unsigned NOT NULL COMMENT '被点赞的视频id',
     `is_favourite`  tinyint  DEFAULT 0  NOT NULL COMMENT '是否点赞',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '发布时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`),
     constraint favourite_user_uid_fk
         foreign key (`uid`) references user (`id`),
     constraint favourite_video_vid_fk
@@ -94,12 +95,13 @@ VALUES (1, 1, 2, 1,'2022-06-01 10:00:00', '2022-06-01 10:00:00'),
 
 CREATE TABLE `follow`
 (
-    `id`         bigint(20) unsigned NOT NULL COMMENT '关注id',
+    `id`         bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '关注id',
     `my_uid`     bigint(20) unsigned NOT NULL COMMENT '用户id',
     `his_uid`    bigint(20) unsigned NOT NULL COMMENT '用户查看的其他人的id',
     `is_follow`  tinyint DEFAULT 0 NOT NULL COMMENT '是否关注',
     `create_time` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '发布时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '修改时间',
+    PRIMARY KEY (`id`),
     constraint follow_my_uid_fk
         foreign key (my_uid) references user (`id`),
     constraint follow_his_uid_fk
