@@ -92,6 +92,8 @@ func Login(c *gin.Context) {
 
 func UserInfo(c *gin.Context) {
 	//数据解析
+	myUidInt, _ := c.Get("uid")
+	myUid := myUidInt.(int64)
 	id := c.Query("user_id")
 	userId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -100,7 +102,7 @@ func UserInfo(c *gin.Context) {
 		})
 		return
 	}
-	user, err := service.QueryUserInfo(userId)
+	user, err := service.QueryUserInfo(myUid, userId)
 	//fmt.Println(user)
 	if err != nil {
 		c.JSON(http.StatusOK, UserResponse{
@@ -108,7 +110,6 @@ func UserInfo(c *gin.Context) {
 		})
 		return
 	}
-	//fmt.Println(*user)
 	c.JSON(http.StatusOK, UserResponse{
 		Response: Response{StatusCode: 0},
 		User:     user,

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package douyin.core;
+option go_package = "./proto";
+import "feed.proto";
+
+message douyin_relation_follower_list_request {
+    int64 user_id = 1; // User ID
+    string token = 2; // User verification token
+}
+
+message douyin_relation_follower_list_response {
+    int32 status_code = 1; // Status code, 0-success, other values-failure
+    string status_msg = 2; // Return status description
+    repeated User user_list = 3; // User information list
+}

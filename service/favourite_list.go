@@ -5,6 +5,7 @@ import (
 	"dousheng/repository"
 	"fmt"
 	"github.com/spf13/viper"
+	"time"
 )
 
 func FavouriteList(uid int64) ([]*proto.Video, error) {
@@ -17,17 +18,35 @@ func FavouriteList(uid int64) ([]*proto.Video, error) {
 			if err != nil {
 				return nil, err
 			}
+
+			video, err := repository.NewVideoDaoInstance().QueryVideoById(fav.VId)
+			if err != nil {
+				return nil, err
+			}
+
+			var IsFollow bool
+
+			follow, err := repository.NewFollowDaoInstance().QueryByUIdAndHisUId(uid, video.UId)
+			if err != nil {
+				repository.NewFollowDaoInstance().CreateFollow(&repository.Follow{
+					MyId:       uid,
+					HisId:      video.Id,
+					IsFollow:   false,
+					CreateTime: time.Now(),
+					UpdateTime: time.Now(),
+				})
+				IsFollow = false
+			} else {
+				IsFollow = follow.IsFollow
+			}
 			demoUser := &proto.User{
 				Id:            user.Id,
 				Name:          user.Name,
 				FollowCount:   user.FollowCount,
 				FollowerCount: user.FollowerCount,
-				IsFollow:      false,
+				IsFollow:      IsFollow,
 			}
-			video, err := repository.NewVideoDaoInstance().QueryVideoById(fav.VId)
-			if err != nil {
-				return nil, err
-			}
+
 			fmt.Println(path + ":" + video.PlayUrl)
 			protoVideoList = append(protoVideoList, &proto.Video{
 				Id:            video.Id,
@@ -36,7 +55,7 @@ func FavouriteList(uid int64) ([]*proto.Video, error) {
 				CoverUrl:      path + video.CoverUrl,
 				FavoriteCount: video.FavouriteCount,
 				CommentCount:  video.CommentCount,
-				IsFavorite:    false,
+				IsFavorite:    true,
 				Title:         video.Title,
 			})
 		}

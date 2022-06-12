@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"strconv"
+	"time"
 )
 
-func Feed() ([]*proto.Video, error) {
+func Feed(myUId int64) ([]*proto.Video, error) {
 	path := viper.GetString("video.absolutePath")
 	maxNumStr := viper.GetString("video.maxNumPerTimes")
 	maxNum, err := strconv.ParseInt(maxNumStr, 10, 64)
@@ -19,6 +20,27 @@ func Feed() ([]*proto.Video, error) {
 	var protoVideoList []*proto.Video
 	for _, video := range *videosList {
 		uid := video.UId
+
+		//获取是否关注
+		var IsFollow bool
+		follow, err := repository.NewFollowDaoInstance().QueryByUIdAndHisUId(myUId, uid)
+		if err != nil {
+			err := repository.NewFollowDaoInstance().CreateFollow(&repository.Follow{
+				MyId:       myUId,
+				HisId:      uid,
+				IsFollow:   false,
+				CreateTime: time.Now(),
+				UpdateTime: time.Now(),
+			})
+			if err != nil {
+				return nil, err
+			}
+			IsFollow = false
+		} else {
+			IsFollow = follow.IsFollow
+		}
+
+		//获取user
 		user, err := repository.NewUserDaoInstance().QueryUserById(uid)
 		if err != nil {
 			return nil, err
@@ -28,8 +50,15 @@ func Feed() ([]*proto.Video, error) {
 			Name:          user.Name,
 			FollowCount:   user.FollowCount,
 			FollowerCount: user.FollowerCount,
-			IsFollow:      false,
+			IsFollow:      IsFollow,
 		}
+
+		//获取是否点赞
+		IsFavourite, err := repository.NewFavouriteDaoInstance().QueryByVIdAndUId(video.Id, myUId)
+		if err != nil {
+			IsFavourite = false
+		}
+
 		fmt.Println(path + ":" + video.PlayUrl)
 		protoVideoList = append(protoVideoList, &proto.Video{
 			Id:            video.Id,
@@ -38,7 +67,7 @@ func Feed() ([]*proto.Video, error) {
 			CoverUrl:      path + video.CoverUrl,
 			FavoriteCount: video.FavouriteCount,
 			CommentCount:  video.CommentCount,
-			IsFavorite:    false,
+			IsFavorite:    IsFavourite,
 			Title:         video.Title,
 		})
 	}

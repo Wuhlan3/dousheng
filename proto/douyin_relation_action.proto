@@ -1,0 +1,15 @@
+syntax = "proto3";
+package douyin.core;
+option go_package = "./proto";
+
+message douyin_relation_action_request {
+    int64 user_id = 1;
+    string token = 2;
+    int64 to_user_id = 3;
+    int32 action_type = 4;
+}
+
+message douyin_relation_action_Response {
+    int32 status_code = 1;
+    string status_msg = 2;
+}

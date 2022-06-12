@@ -2,6 +2,7 @@ package repository
 
 import (
 	"dousheng/util"
+	"gorm.io/gorm"
 	"sync"
 	"time"
 )
@@ -64,4 +65,40 @@ func (*UserDao) QueryUserByName(name string) (*User, error) {
 	}
 	return &user, nil
 
+}
+
+func (*UserDao) IncUserFollow(uid int64) error {
+	err := db.Model(User{}).Where("id = ?", uid).UpdateColumn("follower_count", gorm.Expr("follow_count + ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("inc user follow count error")
+		return err
+	}
+	return nil
+}
+
+func (*UserDao) DecUserFollow(uid int64) error {
+	err := db.Model(User{}).Where("id = ?", uid).UpdateColumn("follower_count", gorm.Expr("follow_count - ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("dec user follow count error")
+		return err
+	}
+	return nil
+}
+
+func (*UserDao) IncUserFollower(uid int64) error {
+	err := db.Model(User{}).Where("id = ?", uid).UpdateColumn("follower_count", gorm.Expr("follower_count + ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("inc user follower count error")
+		return err
+	}
+	return nil
+}
+
+func (*UserDao) DecUserFollower(uid int64) error {
+	err := db.Model(User{}).Where("id = ?", uid).UpdateColumn("follower_count", gorm.Expr("follower_count - ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("dec user follower count error")
+		return err
+	}
+	return nil
 }

@@ -13,18 +13,20 @@ type UserInfo struct {
 }
 
 type UserInfoFlow struct {
+	myUId    int64
 	id       int64
 	user     *repository.User
 	userInfo *UserInfo
 }
 
-func QueryUserInfo(id int64) (*UserInfo, error) {
-	return NewUserInfoFlow(id).Do()
+func QueryUserInfo(myUid int64, id int64) (*UserInfo, error) {
+	return NewUserInfoFlow(myUid, id).Do()
 }
 
-func NewUserInfoFlow(id int64) *UserInfoFlow {
+func NewUserInfoFlow(myUid int64, id int64) *UserInfoFlow {
 	return &UserInfoFlow{
-		id: id,
+		myUId: myUid,
+		id:    id,
 	}
 }
 
@@ -47,13 +49,20 @@ func (f *UserInfoFlow) info() error {
 	if err != nil {
 		return err
 	}
+	var IsFollow bool
+	follow, err := repository.NewFollowDaoInstance().QueryByUIdAndHisUId(f.myUId, user.Id)
+	if err != nil {
+		IsFollow = false
+	} else {
+		IsFollow = follow.IsFollow
+	}
 	f.user = user
 	f.userInfo = &UserInfo{
 		f.user.Id,
 		f.user.Name,
 		f.user.FollowCount,
 		f.user.FollowerCount,
-		false,
+		IsFollow,
 	}
 	return nil
 }
