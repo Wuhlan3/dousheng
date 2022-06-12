@@ -66,7 +66,7 @@ CREATE TABLE `comment`
  DEFAULT CHARSET = utf8mb4 COMMENT ='评论表';
 
 INSERT INTO `comment`
-VALUES (1, 2, 1, '这视频很有意思喔', '2022-06-01 10:00:00', '2022-06-01 10:00:00', 0);
+VALUES (1, 2, 1, 'hellohello', '2022-06-01 10:00:00', '2022-06-01 10:00:00', 0);
 
 
 

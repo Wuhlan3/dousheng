@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"dousheng/proto/proto"
 	"dousheng/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -34,10 +35,19 @@ func FavoriteAction(c *gin.Context) {
 
 // FavoriteList all users have same favorite video list
 func FavoriteList(c *gin.Context) {
-	//c.JSON(http.StatusOK, VideoListResponse{
-	//	Response: Response{
-	//		StatusCode: 0,
-	//	},
-	//	VideoList: DemoVideos,
-	//})
+	uid, _ := c.Get("uid")
+	userId := uid.(int64)
+
+	videos, err := service.FavouriteList(userId)
+	if err != nil {
+		c.JSON(http.StatusOK, proto.DouyinPublishListResponse{
+			StatusCode: 1,
+			StatusMsg:  "Video loads Failed",
+		})
+	}
+	c.JSON(http.StatusOK, proto.DouyinPublishListResponse{
+		StatusCode: 0,
+		StatusMsg:  "publishList successfully",
+		VideoList:  videos,
+	})
 }

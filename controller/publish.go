@@ -59,9 +59,19 @@ func Publish(c *gin.Context) {
 
 // PublishList all users have same publish video list
 func PublishList(c *gin.Context) {
+	uid, _ := c.Get("uid")
+	userId := uid.(int64)
 
-	c.JSON(http.StatusOK, proto.DouyinPublishActionResponse{
+	videos, err := service.PublishList(userId)
+	if err != nil {
+		c.JSON(http.StatusOK, proto.DouyinPublishListResponse{
+			StatusCode: 1,
+			StatusMsg:  "Video loads Failed",
+		})
+	}
+	c.JSON(http.StatusOK, proto.DouyinPublishListResponse{
 		StatusCode: 0,
 		StatusMsg:  "publishList successfully",
+		VideoList:  videos,
 	})
 }

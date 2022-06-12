@@ -41,7 +41,27 @@ func (*VideoDao) QueryVideoList(num int) (*[]Video, error) {
 	var videoList []Video
 	err := db.Limit(num).Find(&videoList).Error
 	if err != nil {
-		util.Logger.Error("find user by id err:" + err.Error())
+		util.Logger.Error("find some video err:" + err.Error())
+		return nil, err
+	}
+	return &videoList, nil
+}
+
+func (*VideoDao) QueryVideoListByUId(uid int64) (*[]Video, error) {
+	var videoList []Video
+	err := db.Where("uid = ?", uid).Find(&videoList).Error
+	if err != nil {
+		util.Logger.Error("find videos by uid err:" + err.Error())
+		return nil, err
+	}
+	return &videoList, nil
+}
+
+func (*VideoDao) QueryVideoById(vid int64) (*Video, error) {
+	var videoList Video
+	err := db.Where("id = ?", vid).Find(&videoList).Error
+	if err != nil {
+		util.Logger.Error("find video by vid err:" + err.Error())
 		return nil, err
 	}
 	return &videoList, nil
