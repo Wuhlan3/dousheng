@@ -11,7 +11,9 @@ import (
 // Feed same demo video list for every request
 func Feed(c *gin.Context) {
 	//var Videos *proto.Video
-	videos, err := service.Feed()
+	myUidInt, _ := c.Get("uid")
+	myUid := myUidInt.(int64)
+	videos, err := service.Feed(myUid)
 	if err != nil {
 		c.JSON(http.StatusOK, proto.DouyinFeedResponse{
 			StatusCode: 1,

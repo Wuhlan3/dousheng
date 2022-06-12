@@ -56,23 +56,12 @@ func (*FavouriteDao) QueryByUId(uid int64) (*[]Favourite, error) {
 }
 
 // UpdateIsFavourite 若点赞了，就取消；若没有，则点赞
-func (f *FavouriteDao) UpdateIsFavourite(vid int64, uid int64) error {
-	isFavourite, err := f.QueryByVIdAndUId(vid, uid)
+func (f *FavouriteDao) UpdateIsFavourite(vid int64, uid int64, IsFavourite bool) error {
+	err := db.Model(Favourite{}).Where("uid = ?", uid).Where("vid = ?", vid).Update("is_favourite", IsFavourite).Error
 	if err != nil {
-		//没有找到
-		if err := f.CreateFavourite(&Favourite{
-			0,
-			uid,
-			vid,
-			true,
-			time.Now(),
-			time.Now(),
-		}); err != nil {
-			return err
-		}
-		return nil
+		return err
 	}
-	db.Model(Favourite{}).Where("uid = ?", uid).Where("vid = ?", vid).Update("is_favourite", !isFavourite)
+
 	return nil
 }
 

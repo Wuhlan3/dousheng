@@ -50,5 +50,10 @@ func (c *CommentActionFlow) action() error {
 	if err != nil {
 		return err
 	}
+	//增加评论数
+	err = repository.NewVideoDaoInstance().IncCommentCount(c.VId)
+	if err != nil {
+		return err
+	}
 	return nil
 }

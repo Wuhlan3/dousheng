@@ -2,6 +2,7 @@ package repository
 
 import (
 	"dousheng/util"
+	"gorm.io/gorm"
 	"sync"
 	"time"
 )
@@ -70,6 +71,42 @@ func (*VideoDao) QueryVideoById(vid int64) (*Video, error) {
 func (*VideoDao) CreateVideo(video *Video) error {
 	if err := db.Create(video).Error; err != nil {
 		util.Logger.Error("create video err:" + err.Error())
+		return err
+	}
+	return nil
+}
+
+func (*VideoDao) IncFavouriteCount(vid int64) error {
+	err := db.Model(Video{}).Where("id = ?", vid).UpdateColumn("favourite_count", gorm.Expr("favourite_count + ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("inc video favourite count error")
+		return err
+	}
+	return nil
+}
+
+func (*VideoDao) DecFavouriteCount(vid int64) error {
+	err := db.Model(Video{}).Where("id = ?", vid).UpdateColumn("favourite_count", gorm.Expr("favourite_count - ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("dec video favourite count error")
+		return err
+	}
+	return nil
+}
+
+func (*VideoDao) IncCommentCount(vid int64) error {
+	err := db.Model(Video{}).Where("id = ?", vid).UpdateColumn("comment_count", gorm.Expr("comment_count + ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("inc video comment count error")
+		return err
+	}
+	return nil
+}
+
+func (*VideoDao) DecCommentCount(vid int64) error {
+	err := db.Model(Video{}).Where("id = ?", vid).UpdateColumn("comment_count", gorm.Expr("comment_count - ?", 1)).Error
+	if err != nil {
+		util.Logger.Error("dec video comment count error")
 		return err
 	}
 	return nil
