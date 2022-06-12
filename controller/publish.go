@@ -2,6 +2,10 @@ package controller
 
 import (
 	"dousheng/proto/proto"
+	"dousheng/service"
+	"fmt"
+	"github.com/spf13/viper"
+	"path/filepath"
 	//"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -15,47 +19,49 @@ import (
 
 // Publish check token then save upload file to public directory
 func Publish(c *gin.Context) {
-	//token := c.PostForm("token")
-	//
-	////验证token，如果token不存在则获取失败
-	//if _, exist := usersLoginInfo[token]; !exist {
-	//	c.JSON(http.StatusOK, Response{StatusCode: 1, StatusMsg: "User doesn't exist"})
-	//	return
-	//}
-	//
-	//data, err := c.FormFile("data")
-	//if err != nil {
-	//	c.JSON(http.StatusOK, Response{
-	//		StatusCode: 1,
-	//		StatusMsg:  err.Error(),
-	//	})
-	//	return
-	//}
-	//
-	//filename := filepath.Base(data.Filename)
-	//user := usersLoginInfo[token]
-	//finalName := fmt.Sprintf("%d_%s", user.Id, filename)
-	//
-	////用方法从数据库中获取
-	//saveFile := filepath.Join("./public/", finalName)
-	//if err := c.SaveUploadedFile(data, saveFile); err != nil {
-	//	c.JSON(http.StatusOK, Response{
-	//		StatusCode: 1,
-	//		StatusMsg:  err.Error(),
-	//	})
-	//	return
-	//}
+	uid, _ := c.Get("uid")
+	userId := uid.(int64)
+
+	data, err := c.FormFile("data")
+	if err != nil {
+		c.JSON(http.StatusOK, Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
+
+	filename := filepath.Base(data.Filename) //返回路径最后的文件名
+	finalName := fmt.Sprintf("%d_%s", userId, filename)
+
+	if err := service.UploadVideo(userId, finalName); err != nil {
+		c.JSON(http.StatusOK, Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
+
+	saveFile := filepath.Join(viper.GetString("video.savePath"), finalName) //文件保存路径
+	if err := c.SaveUploadedFile(data, saveFile); err != nil {
+		c.JSON(http.StatusOK, Response{
+			StatusCode: 1,
+			StatusMsg:  err.Error(),
+		})
+		return
+	}
 
 	c.JSON(http.StatusOK, Response{
 		StatusCode: 0,
-		//StatusMsg:  finalName + " uploaded successfully",
+		StatusMsg:  finalName + " uploaded successfully",
 	})
 }
 
 // PublishList all users have same publish video list
-//暂未开发完成
 func PublishList(c *gin.Context) {
+
 	c.JSON(http.StatusOK, proto.DouyinPublishActionResponse{
 		StatusCode: 0,
+		StatusMsg:  "publishList successfully",
 	})
 }

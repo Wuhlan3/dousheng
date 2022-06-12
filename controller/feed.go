@@ -15,7 +15,7 @@ func Feed(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusOK, proto.DouyinFeedResponse{
 			StatusCode: 1,
-			StatusMsg:  "Video loads Error",
+			StatusMsg:  "Video loads Failed",
 		})
 	}
 	//视频加载没有出错

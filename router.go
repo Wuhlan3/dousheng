@@ -20,12 +20,12 @@ func initRouter(r *gin.Engine) {
 	apiRouter := r.Group("/douyin")
 
 	// basic apis
-	apiRouter.GET("/feed/", controller.Feed)                                  //     /douyin/feed/
-	apiRouter.GET("/user/", middleware.AuthMiddleware(), controller.UserInfo) //已实现
-	apiRouter.POST("/user/register/", controller.Register)                    //已实现
-	apiRouter.POST("/user/login/", controller.Login)                          //已实现
-	apiRouter.POST("/publish/action/", controller.Publish)
-	apiRouter.GET("/publish/list/", controller.PublishList)
+	apiRouter.GET("/feed/", middleware.AuthMiddleware(), controller.Feed)               //已实现
+	apiRouter.GET("/user/", middleware.AuthMiddleware(), controller.UserInfo)           //已实现
+	apiRouter.POST("/user/register/", controller.Register)                              //已实现
+	apiRouter.POST("/user/login/", controller.Login)                                    //已实现
+	apiRouter.POST("/publish/action/", middleware.AuthMiddleware(), controller.Publish) //已实现
+	apiRouter.GET("/publish/list/", middleware.AuthMiddleware(), controller.PublishList)
 
 	// extra apis - I
 	apiRouter.POST("/favorite/action/", middleware.AuthMiddleware(), controller.FavoriteAction) //已实现
