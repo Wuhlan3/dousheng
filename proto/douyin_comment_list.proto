@@ -1,0 +1,20 @@
+syntax = "proto3";
+package douyin.core;
+option go_package = "./proto";
+import "feed.proto";
+
+message douyin_comment_list_request{
+  string token = 1;
+  int64 video_id = 2;
+}
+message douyin_comment_list_response{
+  int32 status_code = 1;
+  string status_msg = 2;
+  repeated Comment comment_list = 3;
+}
+message Comment {
+    int64 id = 1;
+    User user = 2;
+    string content = 3;
+    string create_date = 4;
+}

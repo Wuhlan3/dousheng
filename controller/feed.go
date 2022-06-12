@@ -20,8 +20,6 @@ func Feed(c *gin.Context) {
 	}
 	//视频加载没有出错
 	c.JSON(http.StatusOK, proto.DouyinFeedResponse{
-
-		//StatusCode: 0,
 		StatusCode: 0,
 		StatusMsg:  "Video loads successfully",
 		VideoList:  videos,
