@@ -12,4 +12,5 @@ logger:
   logfilepath: ../log/log.txt
 video:
   absolutePath: http://124.222.132.116:8080/home/go/src/dousheng/public/
+  savePath: ./public
   maxNumPerTimes: 30

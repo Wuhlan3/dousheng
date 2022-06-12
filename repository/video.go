@@ -46,3 +46,11 @@ func (*VideoDao) QueryVideoList(num int) (*[]Video, error) {
 	}
 	return &videoList, nil
 }
+
+func (*VideoDao) CreateVideo(video *Video) error {
+	if err := db.Create(video).Error; err != nil {
+		util.Logger.Error("create video err:" + err.Error())
+		return err
+	}
+	return nil
+}
