@@ -6,87 +6,8 @@
 3. 修改配置文件，连接数据库
 4. go run main.go router.go
 
-# 目录结构
-
-``` bash
-.
-├── branchtest.txt
-├── config                  #配置文件
-│   ├── config.go
-│   └── config.yml
-├── controller              #controller层
-│   ├── comment.go
-│   ├── common.go
-│   ├── demo_data.go
-│   ├── favorite.go
-│   ├── feed.go
-│   ├── publish.go
-│   ├── relation.go
-│   └── user.go
-├── doushengdb.sql          #DDL
-├── go.mod
-├── go.sum
-├── LICENSE
-├── log
-│   └── log.txt
-├── main.go     
-├── middleware              #中间件
-│   ├── AuthMiddleware.go
-│   └── jwt.go
-├── proto                   #proto相关结构体
-│   ├── douyin_comment_list.proto
-│   ├── douyin_publish_action.proto
-│   ├── douyin_publish_list.proto
-│   ├── douyin_relation_action.proto
-│   ├── douyin_relation_follower_list.proto
-│   ├── douyin_relation_follow_list.proto
-│   ├── feed.proto
-│   └── proto
-│       ├── douyin_comment_list.pb.go
-│       ├── douyin_publish_action.pb.go
-│       ├── douyin_publish_list.pb.go
-│       ├── douyin_relation_action.pb.go
-│       ├── douyin_relation_follower_list.pb.go
-│       ├── douyin_relation_follow_list.pb.go
-│       └── feed.pb.go
-├── public                  #静态资源
-│   ├── 4_jiajia.jpg
-│   ├── 4_jiajia.mp4
-│   ├── bear.jpg
-│   ├── bear.mp4
-│   ├── bear.png
-│   ├── cat1.jpg
-│   ├── cat1.mp4
-│   ├── cat2.jpg
-│   ├── cat2.mp4
-│   └── data
-├── README.md
-├── repository              #repository层
-│   ├── comment.go
-│   ├── db_init.go
-│   ├── favourite.go
-│   ├── relation.go
-│   ├── user.go
-│   ├── video.go
-│   └── videos.go
-├── router.go               #路由
-├── service                 #service层
-│   ├── comment_action.go
-│   ├── comment_list.go
-│   ├── favourite_action.go
-│   ├── favourite_list.go
-│   ├── feed.go
-│   ├── publish.go
-│   ├── publish_list.go
-│   ├── relation_action.go
-│   ├── relation_follower_list.go
-│   ├── relation_follow_list.go
-│   ├── user_info.go
-│   ├── user_login.go
-│   └── user_register.go
-└── util                    #日志系统
-    └── logger.go
-```
+# 数据库E-R图
+![dousheng](https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/img/dousheng.svg)
 
 # 项目亮点
 1. 采用repository、service、controller三层结构，结构清晰，模块之间耦合性较低
