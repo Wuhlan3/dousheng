@@ -13,9 +13,6 @@ func main() {
 	if err := repository.Init(); err != nil {
 		os.Exit(-1)
 	} //数据库连接
-	//if err := util.InitLogger(); err != nil {
-	//	os.Exit(-1)
-	//}
 	util.InitLogger()
 	r := gin.Default()
 

@@ -4,13 +4,19 @@ datasource:
   driverName: mysql
   host: 127.0.0.1
   port: 3306
-  database: dousheng
-  username: root
-  password: 123456
+  database:
+  username:
+  password:
   charset: utf8
 logger:
   logfilepath: ../log/log.txt
 video:
-  absolutePath: http://124.222.132.116:8080/home/go/src/dousheng/public/
+  absolutePath:
   savePath: ./public
   maxNumPerTimes: 30
+cos:
+  uriPath:
+  url:
+  SecretID:
+  SecretKey:
+  videoDir:
