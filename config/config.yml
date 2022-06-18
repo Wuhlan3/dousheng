@@ -4,19 +4,19 @@ datasource:
   driverName: mysql
   host: 127.0.0.1
   port: 3306
-  database:
-  username:
-  password:
+  database: dousheng
+  username: root
+  password: 123456
   charset: utf8
 logger:
   logfilepath: ../log/log.txt
 video:
-  absolutePath:
+  absolutePath: http://124.222.132.116:8080/home/go/src/dousheng/public/
   savePath: ./public
   maxNumPerTimes: 30
 cos:
-  uriPath:
-  url:
-  SecretID:
-  SecretKey:
-  videoDir:
+  uriPath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/dousheng/
+  url: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com
+  SecretID: AKID61g4B1atwiDSQ6VeX9UYMt86oFOwCCvM
+  SecretKey: B6k6BzWmlTv60d06uRhgNnwoPikVzC8o
+  videoDir: dousheng/
