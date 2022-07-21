@@ -13,6 +13,10 @@ func main() {
 	if err := repository.Init(); err != nil {
 		os.Exit(-1)
 	} //数据库连接
+	if err := repository.RedisInit(); err != nil {
+		os.Exit(-1)
+	} //redis连接
+
 	util.InitLogger()
 	r := gin.Default()
 

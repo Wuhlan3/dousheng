@@ -53,6 +53,7 @@ func (c *FollowDao) QueryByHisUId(UId int64) (*[]Follow, error) {
 	return &followList, nil
 }
 
+// QueryByUIdAndHisUId 查询UId与HisUId相关的的列
 func (c *FollowDao) QueryByUIdAndHisUId(myUId int64, hisUId int64) (*Follow, error) {
 	var follow Follow
 	err := db.Where("my_uid = ?", myUId).Where("his_uid = ?", hisUId).First(&follow).Error
@@ -61,6 +62,17 @@ func (c *FollowDao) QueryByUIdAndHisUId(myUId int64, hisUId int64) (*Follow, err
 		return nil, err
 	}
 	return &follow, nil
+}
+
+// QueryIsFollowByUIdAndHisUId 查询UId是否关注HisUId
+func (c *FollowDao) QueryIsFollowByUIdAndHisUId(myUId int64, hisUId int64) (isFollow bool, err error) {
+	follow, err := c.QueryByUIdAndHisUId(myUId, hisUId)
+	if err != nil {
+		isFollow = false
+	} else {
+		isFollow = follow.IsFollow
+	}
+	return isFollow, nil
 }
 
 func (c *FollowDao) UpdateFollow(myUId int64, hisUId int64, isFollow bool) error {
