@@ -23,6 +23,6 @@ video:
 cos:
   uriPath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/dousheng/
   url: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com
-  SecretID: AKID61g4B1atwiDSQ6VeX9UYMt86oFOwCCvM
-  SecretKey: B6k6BzWmlTv60d06uRhgNnwoPikVzC8o
+  SecretID:
+  SecretKey:
   videoDir: dousheng/
