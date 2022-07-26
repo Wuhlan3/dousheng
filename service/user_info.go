@@ -28,7 +28,7 @@ func QueryUserInfo(myUId int64, id int64) (*UserInfo, error) {
 	} else if err != nil {
 		return nil, err
 	}
-
+	//获取是否关注
 	isFollow, err := repository.NewFollowDaoInstance().QueryIsFollowByUIdAndHisUId(myUId, id)
 	if err != nil {
 		return nil, err

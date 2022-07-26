@@ -8,16 +8,16 @@ import (
 )
 
 type Video struct {
-	Id             int64     `gorm:"column:id"`
-	UId            int64     `gorm:"column:uid"`
-	PlayUrl        string    `gorm:"column:play_url"`
-	CoverUrl       string    `gorm:"column:cover_url"`
-	CommentCount   int64     `gorm:"column:comment_count"`
-	FavouriteCount int64     `gorm:"column:favourite_count"`
-	Title          string    `gorm:"column:title"`
-	CreateTime     time.Time `gorm:"column:create_time"`
-	UpdateTime     time.Time `gorm:"column:update_time"`
-	IsDeleted      bool      `gorm:"column:is_deleted"`
+	Id             int64     `gorm:"column:id" redis:"id"`
+	UId            int64     `gorm:"column:uid" redis:"uid"`
+	PlayUrl        string    `gorm:"column:play_url" redis:"play_url"`
+	CoverUrl       string    `gorm:"column:cover_url" redis:"cover_url"`
+	CommentCount   int64     `gorm:"column:comment_count" redis:"comment_count"`
+	FavouriteCount int64     `gorm:"column:favourite_count" redis:"favorite_count"`
+	Title          string    `gorm:"column:title" redis:"title"`
+	CreateTime     time.Time `gorm:"column:create_time" redis:"-"`
+	UpdateTime     time.Time `gorm:"column:update_time" redis:"-"`
+	IsDeleted      bool      `gorm:"column:is_deleted" redis:"-"`
 }
 
 func (Video) TableName() string {
@@ -66,6 +66,16 @@ func (*VideoDao) QueryVideoById(vid int64) (*Video, error) {
 		return nil, err
 	}
 	return &videoList, nil
+}
+
+func (*VideoDao) QueryVideosByIdList(vidList []int64) ([]Video, error) {
+	var videoList []Video
+	err := db.Where("id in ?", vidList).Find(&videoList).Error
+	if err != nil {
+		util.Logger.Error("find videoList by vidList err:" + err.Error())
+		return nil, err
+	}
+	return videoList, nil
 }
 
 func (*VideoDao) CreateVideo(video *Video) error {
