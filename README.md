@@ -24,6 +24,9 @@
 
 # 运行结果
 注册与登录、视频流功能如下：
+
 ![dousheng_result1](https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/img/dousheng1.png)
+
 点赞、关注、喜欢视频列表、评论等功能如下：
+
 ![dousheng_result2](https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/img/dousheng2.png)
