@@ -10,6 +10,15 @@
 # 数据库E-R图
 ![dousheng](https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/img/dousheng.svg)
 
+# feed过程
+feed即用户在刷视频过程中请求的接口，响应的是视频相关数据，这一部分应该是最频繁调用的且包括了几乎所有表的数据，所以该过程较复杂。
+1. 用户会请求两个参数，分别是token和latest_time。其中token会经过JWT解析，得到用户的uid，latest_time表示限制返回视频的时间戳；
+2. 由于需要限制返回的视频数量，且我们期望能够优先刷到最新投稿的视频，所以可以采用Redis中的ZSET数据结构来保存视频的序列号；
+3. 为了减少视频信息的查询数据库次数，当我们获得视频序列号的时候，可以直接通过video:id在Redis中查询相应的视频信息。
+其流程图如下：
+
+<img src="https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/img/dousheng_feed.jpg" width="700px">
+
 # 项目亮点
 1. 采用repository、service、controller三层结构，结构清晰，模块之间耦合性较低
 2. 使用JWT鉴权，直接对token进行解析，可以得到user_id，减少访问数据库的次数
