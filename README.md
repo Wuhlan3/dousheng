@@ -1,5 +1,6 @@
 # 抖声
 呆头鹅大队项目——抖声（客户端已提供），主要使用go语言来完善相应的接口，尽可能提高性能。
+也可以参考一下，微服务结构版本https://github.com/Wuhlan3/kitexdousheng
 
 # 运行方式
 1. go mod init
