@@ -5,12 +5,12 @@ import (
 	"time"
 )
 
-func UploadVideo(uid int64, fileName string) error {
+func UploadVideo(uid int64, fileName string, imgName string) error {
 	len := len(fileName)
 	video := &repository.Video{
 		UId:            uid,
 		PlayUrl:        fileName,
-		CoverUrl:       "bear.jpg",
+		CoverUrl:       imgName,
 		CommentCount:   10,
 		FavouriteCount: 10,
 		Title:          fileName[:len-4],

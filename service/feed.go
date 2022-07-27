@@ -9,7 +9,9 @@ import (
 )
 
 func Feed(myUId int64, LatestTime int64) ([]*proto.Video, error) {
-	path := viper.GetString("cos.uriPath")
+	//path := viper.GetString("cos.uriPath")
+	videoPath := viper.GetString("cos.uriVideoPath")
+	imgPath := viper.GetString("cos.uriPicturePath")
 	maxNumStr := viper.GetString("video.maxNumPerTimes")
 	maxNum, err := strconv.ParseInt(maxNumStr, 10, 64)
 	if err != nil {
@@ -58,12 +60,12 @@ func Feed(myUId int64, LatestTime int64) ([]*proto.Video, error) {
 			IsFavourite = false
 		}
 
-		fmt.Println(path + video.PlayUrl)
+		fmt.Println(videoPath + video.PlayUrl)
 		protoVideoList = append(protoVideoList, &proto.Video{
 			Id:            video.Id,
 			Author:        demoUser,
-			PlayUrl:       path + video.PlayUrl,
-			CoverUrl:      path + video.CoverUrl,
+			PlayUrl:       videoPath + video.PlayUrl,
+			CoverUrl:      imgPath + video.CoverUrl,
 			FavoriteCount: video.FavouriteCount,
 			CommentCount:  video.CommentCount,
 			IsFavorite:    IsFavourite,

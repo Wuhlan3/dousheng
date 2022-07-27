@@ -6,7 +6,7 @@ datasource:
   port: 3306
   database: dousheng
   username: root
-  password: 123456
+  password:
   charset: utf8
 redis:
   host: 127.0.0.1
@@ -21,8 +21,13 @@ video:
   savePath: ./public
   maxNumPerTimes: 30
 cos:
-  uriPath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/dousheng/
+#  uriPath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/dousheng/
+#  url: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com
+  uriVideoPath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/kitexdousheng/video/
+  uriPicturePath: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com/kitexdousheng/img/
   url: https://wuhlan3-1307602190.cos.ap-guangzhou.myqcloud.com
   SecretID:
   SecretKey:
-  videoDir: dousheng/
+#  videoDir: dousheng/
+  videoDir: /kitexdousheng/video/
+  imgDir: /kitexdousheng/img/

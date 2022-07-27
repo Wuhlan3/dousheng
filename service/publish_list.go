@@ -8,7 +8,9 @@ import (
 )
 
 func PublishList(uid int64) ([]*proto.Video, error) {
-	path := viper.GetString("video.absolutePath")
+	//path := viper.GetString("video.absolutePath")
+	videoPath := viper.GetString("cos.uriVideoPath")
+	imgPath := viper.GetString("cos.uriPicturePath")
 	videosList, err := repository.NewVideoDaoInstance().QueryVideoListByUId(uid)
 	var protoVideoList []*proto.Video
 	for _, video := range *videosList {
@@ -23,15 +25,22 @@ func PublishList(uid int64) ([]*proto.Video, error) {
 			FollowerCount: user.FollowerCount,
 			IsFollow:      false,
 		}
-		fmt.Println(path + ":" + video.PlayUrl)
+		fmt.Println(videoPath + ":" + video.PlayUrl)
+
+		//获取是否点赞
+		isFavourite, err := repository.NewFavouriteDaoInstance().QueryByVIdAndUId(video.Id, uid)
+		if err != nil {
+			isFavourite = false
+		}
+
 		protoVideoList = append(protoVideoList, &proto.Video{
 			Id:            video.Id,
 			Author:        demoUser,
-			PlayUrl:       path + video.PlayUrl,
-			CoverUrl:      path + video.CoverUrl,
+			PlayUrl:       videoPath + video.PlayUrl,
+			CoverUrl:      imgPath + video.CoverUrl,
 			FavoriteCount: video.FavouriteCount,
 			CommentCount:  video.CommentCount,
-			IsFavorite:    false,
+			IsFavorite:    isFavourite,
 			Title:         video.Title,
 		})
 	}
