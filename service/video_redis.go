@@ -11,35 +11,32 @@ import (
 	"time"
 )
 
+func AddVIdListToRedis(video *repository.Video) (err error) {
+	//判断feed是否存在，如果不存在，要重新创建
+	err = updateFeed()
+	if err != nil {
+		return err
+	}
+
+	//pipe.ZAdd(global.CONTEXT, "feed", &redis.Z{Score: float64(video.CreatedAt.UnixMilli()) / 1000, Member: videoIDStr})
+	videoIDStr := strconv.FormatInt(video.Id, 10)
+	//添加新的视频序列号
+	if err := global.REDIS.ZAdd(global.CONTEXT, "feed", &redis.Z{Score: float64(video.CreateTime.UnixMilli()) / 1000, Member: videoIDStr}).Err(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // GetVIdListFromRedis 从redis中获取视频序列
 func GetVIdListFromRedis(LatestTime int64, MaxNumVideo int64) (VIdList []string, err error) {
-	n, err := global.REDIS.Exists(global.CONTEXT, "feed").Result()
+	// Redis中查询feed
+	feedKey := "feed"
+
+	//判断feed是否存在，如果不存在，要重新创建
+	err = updateFeed()
 	if err != nil {
 		return nil, err
 	}
-	//fmt.Println(n)
-	// "feed"不存在
-	if n <= 0 {
-		videosList, err := repository.NewVideoDaoInstance().QueryVideoList(100)
-		fmt.Println(videosList)
-		if err != nil {
-			return nil, err
-		}
-		if len(*videosList) == 0 {
-			return nil, errors.New("not found video")
-		}
-
-		var listZ = make([]*redis.Z, 0, len(*videosList))
-		for _, video := range *videosList {
-			listZ = append(listZ, &redis.Z{Score: float64(video.CreateTime.UnixMilli()) / 1000, Member: video.Id})
-		}
-
-		if err := global.REDIS.ZAdd(global.CONTEXT, "feed", listZ...).Err(); err != nil {
-			return nil, err
-		}
-	}
-	// Redis中查询feed
-	feedKey := "feed"
 
 	// 初始化查询条件， Offset和Count用于分页
 	cond := redis.ZRangeBy{
@@ -48,8 +45,6 @@ func GetVIdListFromRedis(LatestTime int64, MaxNumVideo int64) (VIdList []string,
 		Offset: 0,                                                      // 类似sql的limit, 表示开始偏移量
 		Count:  MaxNumVideo,                                            // 一次返回多少数据
 	}
-
-	//fmt.Println(cond)
 
 	// 获取推送视频ID按逆序返回
 	videoIDStrList, err := global.REDIS.ZRevRangeByScore(global.CONTEXT, feedKey, &cond).Result()
@@ -141,4 +136,32 @@ func GetVideoListFromRedis(vidStrList []string) (videoList []repository.Video, e
 		return nil, err
 	}
 	return videoList, nil
+}
+
+func updateFeed() error {
+	n, err := global.REDIS.Exists(global.CONTEXT, "feed").Result()
+	if err != nil {
+		return err
+	}
+	// "feed"不存在
+	if n <= 0 {
+		videosList, err := repository.NewVideoDaoInstance().QueryVideoList(100)
+		fmt.Println(videosList)
+		if err != nil {
+			return err
+		}
+		if len(*videosList) == 0 {
+			return errors.New("not found video")
+		}
+
+		var listZ = make([]*redis.Z, 0, len(*videosList))
+		for _, video := range *videosList {
+			listZ = append(listZ, &redis.Z{Score: float64(video.CreateTime.UnixMilli()) / 1000, Member: video.Id})
+		}
+
+		if err := global.REDIS.ZAdd(global.CONTEXT, "feed", listZ...).Err(); err != nil {
+			return err
+		}
+	}
+	return nil
 }

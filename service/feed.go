@@ -9,7 +9,6 @@ import (
 )
 
 func Feed(myUId int64, LatestTime int64) ([]*proto.Video, error) {
-	//path := viper.GetString("cos.uriPath")
 	videoPath := viper.GetString("cos.uriVideoPath")
 	imgPath := viper.GetString("cos.uriPicturePath")
 	maxNumStr := viper.GetString("video.maxNumPerTimes")
@@ -31,15 +30,16 @@ func Feed(myUId int64, LatestTime int64) ([]*proto.Video, error) {
 		return nil, err
 	}
 
-	//旧版本，直接查数据库
-	//videosList, err := repository.NewVideoDaoInstance().QueryVideoList(int(maxNum))
-
+	//获取视频作者相关信息
 	var protoVideoList []*proto.Video
 	for _, video := range videosList {
 		uid := video.UId
 
 		//获取是否关注
 		isFollow, err := repository.NewFollowDaoInstance().QueryIsFollowByUIdAndHisUId(myUId, uid)
+		if err != nil {
+			isFollow = false
+		}
 
 		//获取user
 		user, err := repository.NewUserDaoInstance().QueryUserById(uid)
